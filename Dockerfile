@@ -1,7 +1,9 @@
 FROM dunglas/frankenphp
 
 RUN install-php-extensions \
-	pcntl
+    pcntl \
+    redis \
+    uv
 
 COPY . /app
 
