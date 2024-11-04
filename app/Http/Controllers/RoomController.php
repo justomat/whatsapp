@@ -12,7 +12,7 @@ class RoomController extends Controller
      */
     public function index()
     {
-        //
+        return response()->json(Room::all());
     }
 
     /**
@@ -20,7 +20,17 @@ class RoomController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'name' => 'required|string|max:255',
+        ]);
+
+        $room = Room::create($request->all());
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Room created successfully.',
+            'data' => $room,
+        ], 201);
     }
 
     /**
