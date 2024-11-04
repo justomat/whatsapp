@@ -54,6 +54,14 @@ class RoomController extends Controller
      */
     public function destroy(Room $room)
     {
-        //
+        Room::destroy($room->id);
+    }
+
+    /**
+     * Join the current user to the room.
+     */
+    public function join(Room $room)
+    {
+        return $room->name.auth->id();
     }
 }

@@ -18,6 +18,7 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
     Route::resource('room', RoomController::class);
+    Route::get('/room/{room}/join', [RoomController::class, 'join'])->name('room.join');
 });
 
 require __DIR__.'/auth.php';
