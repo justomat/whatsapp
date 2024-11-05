@@ -3,6 +3,8 @@
 namespace App\Events;
 
 use App\Models\Message;
+use App\Models\Room;
+use App\Models\User;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Broadcasting\PrivateChannel;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
@@ -17,8 +19,8 @@ class MessageSent implements ShouldBroadcast
      * Create a new event instance.
      */
     public function __construct(
-        public string $user,
-        public string $room,
+        public User $author,
+        public Room $room,
         public Message $message,
     ) {
         //
@@ -32,7 +34,7 @@ class MessageSent implements ShouldBroadcast
     public function broadcastOn(): array
     {
         return [
-            new PrivateChannel('chat.'.$this->room),
+            new PrivateChannel('chat.room.'.$this->room->id),
         ];
     }
 }

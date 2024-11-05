@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\MessageSent;
 use Illuminate\Http\Request;
 
 class MessageController extends Controller
@@ -24,8 +25,7 @@ class MessageController extends Controller
 
         // Check if a media file is uploaded
         if ($request->hasFile('media')) {
-            // Store the media file in the "media" directory
-            $filepath = $request->file('media')->store('media', 'public');
+            $filepath = $request->file('media')->store('root/media');
         }
 
         // Create a new message record in the specified room
@@ -34,6 +34,8 @@ class MessageController extends Controller
             'media' => $filepath,
             'user_id' => auth()->id(),
         ]);
+
+        MessageSent::dispatch(auth()->user(), $room, $message);
 
         // Return a JSON response indicating success
         return response()->json([
