@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\MessageController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\RoomController;
 use Illuminate\Support\Facades\Route;
@@ -22,6 +23,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/room/{room}/leave', [RoomController::class, 'leave'])->name('room.leave');
     Route::post('/room/{room}/message', [MessageController::class, 'send'])->name('message.send');
 
+    Route::get('/message', [MessageController::class, 'index'])->name('message.index');
 });
 
 require __DIR__.'/auth.php';

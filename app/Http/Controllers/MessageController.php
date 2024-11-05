@@ -42,4 +42,22 @@ class MessageController extends Controller
             'data' => $message,
         ], 201);
     }
+
+    /**
+     * List all message of a user.
+     */
+    public function index()
+    {
+        // Get the authenticated user
+        $user = auth()->user();
+
+        // Get all messages of the authenticated user
+        $messages = $user->rooms()->with('messages')->get();
+
+        // Return a JSON response containing the messages
+        return response()->json([
+            'success' => true,
+            'data' => $messages,
+        ]);
+    }
 }
