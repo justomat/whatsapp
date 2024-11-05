@@ -13,8 +13,9 @@ return new class extends Migration
     {
         Schema::create('room_user', function (Blueprint $table) {
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
-            $table->foreignId('room_id')->constrained()->onDelete('cascade');
+            $table->uuid('room_id');
 
+            $table->foreign('room_id')->references('id')->on('rooms')->onDelete('cascade');
             $table->primary(['user_id', 'room_id']);
         });
     }

@@ -13,7 +13,8 @@ return new class extends Migration
     {
         Schema::create('messages', function (Blueprint $table) {
             $table->uuid('id')->primary();
-            $table->foreignId('room_id')->constrained()->cascadeOnDelete();
+            $table->uuid('room_id');
+            $table->foreign('room_id')->references('id')->on('rooms')->cascadeOnDelete();
             $table->string('content');
             $table->string('media')->nullable();
             $table->timestamp('created_at')->useCurrent();
