@@ -19,6 +19,9 @@ Route::middleware('auth')->group(function () {
 
     Route::resource('room', RoomController::class);
     Route::get('/room/{room}/join', [RoomController::class, 'join'])->name('room.join');
+    Route::get('/room/{room}/leave', [RoomController::class, 'leave'])->name('room.leave');
+    Route::post('/room/{room}/message', [MessageController::class, 'send'])->name('message.send');
+
 });
 
 require __DIR__.'/auth.php';

@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Models\Room;
 use Illuminate\Http\Request;
 
+const MAX_MEMBERS = 255;
+
 class RoomController extends Controller
 {
     /**
@@ -62,6 +64,42 @@ class RoomController extends Controller
      */
     public function join(Room $room)
     {
-        return $room->name.auth->id();
+        $count = Cache::get('room:'.$room->id, function () {
+            return 0;
+        });
+
+        if ($count >= $MAX_MEMBERS) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Room is full.',
+            ], 400);
+        }
+
+        Cache::increment('room:'.$room->id);
+
+        $room->users()->attach(auth()->id());
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Joined room successfully.',
+        ]);
+    }
+
+    /**
+     * Leave the current user from the room.
+     */
+    public function leave(Room $room)
+    {
+        // check user is in the room.
+        if ($room->users()->where('user_id', auth()->id())->exists()) {
+            Cache::decrement('room:'.$room->id);
+
+            $room->users()->detach(auth()->id());
+        }
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Left room successfully.',
+        ]);
     }
 }
