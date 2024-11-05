@@ -12,8 +12,11 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('messages', function (Blueprint $table) {
-            $table->id();
-            $table->timestamps();
+            $table->uuid('id')->primary();
+            $table->foreignId('room_id')->constrained()->cascadeOnDelete();
+            $table->string('content');
+            $table->string('media')->nullable();
+            $table->timestamp('created_at')->useCurrent();
         });
     }
 
