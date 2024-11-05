@@ -1,0 +1,253 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "Room API",
+        "version": "1.0.0",
+        "description": "API for managing chat room"
+    },
+    "servers": [
+        {
+            "url": "http://localhost:8000",
+            "description": "Local development server"
+        }
+    ],
+    "paths": {
+        "/room": {
+            "get": {
+                "summary": "Get a list of all room",
+                "operationId": "getRooms",
+                "responses": {
+                    "200": {
+                        "description": "A list of room",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/Room"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "summary": "Create a new room",
+                "operationId": "createRoom",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/CreateRoomRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Room created successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/CreateRoomResponse"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation error"
+                    }
+                }
+            }
+        },
+        "/room/{roomId}": {
+            "get": {
+                "summary": "Get a room by ID",
+                "operationId": "getRoomById",
+                "parameters": [
+                    {
+                        "name": "roomId",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Room details",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Room"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Room not found"
+                    }
+                }
+            },
+            "put": {
+                "summary": "Update an existing room",
+                "operationId": "updateRoom",
+                "parameters": [
+                    {
+                        "name": "roomId",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/UpdateRoomRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Room updated successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Room"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Room not found"
+                    }
+                }
+            },
+            "delete": {
+                "summary": "Delete a room by ID",
+                "operationId": "deleteRoom",
+                "parameters": [
+                    {
+                        "name": "roomId",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Room deleted successfully"
+                    },
+                    "404": {
+                        "description": "Room not found"
+                    }
+                }
+            }
+        },
+        "/room/{roomId}/join": {
+            "post": {
+                "summary": "Join the current user to a room",
+                "operationId": "joinRoom",
+                "parameters": [
+                    {
+                        "name": "roomId",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "User joined the room successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "string"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Room not found"
+                    }
+                }
+            }
+        }
+    },
+    "components": {
+        "schemas": {
+            "Room": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "name": {
+                        "type": "string",
+                        "example": "General Chat"
+                    },
+                    "created_at": {
+                        "type": "string",
+                        "format": "date-time",
+                        "example": "2023-08-04T12:34:56Z"
+                    },
+                    "updated_at": {
+                        "type": "string",
+                        "format": "date-time",
+                        "example": "2023-08-04T12:34:56Z"
+                    }
+                }
+            },
+            "CreateRoomRequest": {
+                "type": "object",
+                "required": [
+                    "name"
+                ],
+                "properties": {
+                    "name": {
+                        "type": "string",
+                        "example": "General Chat"
+                    }
+                }
+            },
+            "CreateRoomResponse": {
+                "type": "object",
+                "properties": {
+                    "success": {
+                        "type": "boolean",
+                        "example": true
+                    },
+                    "message": {
+                        "type": "string",
+                        "example": "Room created successfully."
+                    },
+                    "data": {
+                        "$ref": "#/components/schemas/Room"
+                    }
+                }
+            },
+            "UpdateRoomRequest": {
+                "type": "object",
+                "properties": {
+                    "name": {
+                        "type": "string",
+                        "example": "New Room Name"
+                    }
+                }
+            }
+        }
+    }
+}
